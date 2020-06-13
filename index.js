@@ -4,7 +4,8 @@ var ebisu = require('ebisu-js');
 var readlineSync = require('readline-sync');
 var kana = require('./kana');
 
-var lines = fs.readFileSync(process.argv[2] || 'README.md', 'utf8').split('\n');
+var filename = process.argv[2] || 'README.md';
+var lines = fs.readFileSync(filename, 'utf8').split('\n');
 
 /**
  * @param {string} s
@@ -76,5 +77,5 @@ while (notdone) {
   }
 
   lines[best.lino] = lines[best.lino].split('//')[0] + `// ${JSON.stringify(newCard)}`;
-  fs.writeFileSync('index.md', lines.join('\n'));
+  fs.writeFileSync(filename, lines.join('\n'));
 }
