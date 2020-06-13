@@ -3,11 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": "./index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": {
+    "name": "Ahmed Fasih"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fasiha/meguro.git"
+  },
   "license": "Unlicense",
   "dependencies": {
     "ebisu-js": "^2.0.0",
