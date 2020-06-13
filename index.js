@@ -6,7 +6,6 @@ var readlineSync = require('readline-sync');
 var kana = require('./kana');
 
 var filename = process.argv[2] || 'README.md';
-var lines = fs.readFileSync(filename, 'utf8').split('\n');
 
 /**
  * @param {string} s
@@ -19,6 +18,8 @@ var notdone = true;
 while (notdone) {
   var now = Date.now();
   var best = {card: undefined, lino: undefined, pRecall: Infinity};
+
+  var lines = fs.readFileSync(filename, 'utf8').split('\n');
   for (const [lino, line] of lines.entries()) {
     if (!(/.+ .+@@/.test(line))) { continue; }
     const data = line.split('@@', 2)[1];
