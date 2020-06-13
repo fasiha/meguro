@@ -5,15 +5,16 @@ Command-line app for very, very simple flashcards.
 Any line that has
 1. a word (the prompt, i.e., the question),
 2. another word (the expected answer),
-3. and two slashes, i.e.,
+3. optionally anything else,
+4. and two at symbols, i.e.,
 ```
-//
+@@
 ```
-is treated as a flashcard.
+is treated as a flashcard. Stuff after the double-@ is Meguro-specific stuff. For example:
 
-Stuff after the double-slash is Meguro-specific stuff. For example:
+☀️ sun "Oh Mr Sun, Sun, Mr Golden Sun" @@
 
-☀️ sun //
+The ☀️ emoji and "sun" comprise the flashcard. The "Oh Mr Sun, Sun, Mr Golden Sun" is extra information that'll be shown after you answer this flashcard.
 
 ## Installation
 Install [Git](https://git-scm.com) and [Node.js](https://nodejs.org) (either LTS or current version is fine!), then in your terminal (something like Terminal.app, Command Prompt, xterm, etc.), run the following:
@@ -30,7 +31,7 @@ node index.js README.md
 ```
 Meguro will read README.md (this file) and will quiz you on the "sun" flashcard above. Type an answer, or just press Enter to quit.
 
-Meguro will then tell you whether you answered correctly or not. If not, it will tell you the answer it was expecting.
+Meguro will then tell you whether you answered correctly or not. If not, it will tell you the answer it was expecting. In either case, it'll also tell you any extra information accompanying the card.
 
 Then it will offer to let you scale the quiz's easiness or difficulty. Meguro uses [Ebisu](https://fasiha.github.io/ebisu) under the hood for nice Bayesian spaced-repetition scheduling, so you can totally just let it do its thing by just pressing Enter here. But, if you want Meguro to show you this flashcard less often because you really know it well, you can give it a number like 2 or 5 or something greater than 1 to *increase* the time between reviews by that amount.
 
@@ -42,9 +43,9 @@ As mentioned, if you don't need to scale the card's easiness, just hit Enter. In
 
 Here are another couple of flashcards so you can see how it works:
 
-🚢 boat //
+🚢 boat @@
 
-🎹 piano //
+🎹 piano @@
 
 Out of the box, Meguro will convert between hiragana and katakana as needed.
 

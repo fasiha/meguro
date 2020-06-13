@@ -20,22 +20,17 @@ while (notdone) {
   var now = Date.now();
   var best = {card: undefined, lino: undefined, pRecall: Infinity};
   for (const [lino, line] of lines.entries()) {
-    if (!(/.+ .+\/\//.test(line))) { continue; }
-    const data = line.split('//', 2)[1];
+    if (!(/.+ .+@@/.test(line))) { continue; }
+    const data = line.split('@@', 2)[1];
     if (data.trim() === '') {
       best = {card: {model: DEFAULT_MODEL}, lino, pRecall: -Infinity};
       break;
     }
     /** @type{{model:Array<number>, time?: string}} */
     const card = JSON.parse(data);
-    if (card.time) {
-      const pRecall = ebisu.predictRecall(card.model, elapsed(card.time, now));
-      if (pRecall < best.pRecall) {
-        best = {card, lino, pRecall};
-      }
-    } else {
-      best = {card, lino, pRecall: -Infinity};
-      break;
+    const pRecall = ebisu.predictRecall(card.model, elapsed(card.time, now));
+    if (pRecall < best.pRecall) {
+      best = {card, lino, pRecall};
     }
   }
 
@@ -44,7 +39,7 @@ while (notdone) {
     process.exit(0);
   }
 
-  var [prompt, expected] = lines[best.lino].split('//')[0].split(/\s/, 2);
+  var [prompt, _sep, expected, ...extra] = lines[best.lino].split('@@')[0].split(/(\s)/);
   var response = readlineSync.question(`${prompt} :: `).trim();
   if (!response) {
     console.log('Quitting');
@@ -52,11 +47,10 @@ while (notdone) {
   }
   var result = prompt === response || kana.kata2hira(response) === kana.kata2hira(expected);
 
-  var scale = readlineSync.question(`${
-      result
-          ? '💇‍♀️⚡️🎊🍌'
-          : `🙅‍♂️👎❌🚷, expected: ${
-                expected}`}. Type a number to scale this card's easiness, anything else to quit, or Enter to see the next question > `);
+  console.log(`${result ? '💇‍♀️⚡️🎊🍌' : `🙅‍♂️👎❌🚷, expected: ${expected}`}. ${
+      extra.join('')}`);
+  var scale = readlineSync.question(
+      `Type a number to scale this card's easiness, Enter to see next question, or anything else to quit > `);
 
   var newNow = new Date();
   /** @type{{model:Array<number>, time?: string}} */
@@ -77,6 +71,6 @@ while (notdone) {
     }
   }
 
-  lines[best.lino] = lines[best.lino].split('//')[0] + `// ${JSON.stringify(newCard)}`;
+  lines[best.lino] = lines[best.lino].split('@@')[0] + `@@ ${JSON.stringify(newCard)}`;
   fs.writeFileSync(filename, lines.join('\n'));
 }
