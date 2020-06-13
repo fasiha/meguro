@@ -1,0 +1,16 @@
+{
+  "name": "meguro",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Unlicense",
+  "dependencies": {
+    "ebisu-js": "^2.0.0",
+    "readline-sync": "^1.4.10"
+  }
+}
