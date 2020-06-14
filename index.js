@@ -28,7 +28,13 @@ while (notdone) {
       break;
     }
     /** @type{{model:Array<number>, time?: string}} */
-    const card = JSON.parse(data);
+    let card;
+    try {
+      card = JSON.parse(data);
+    } catch (err) {
+      console.error({err, data, line, lino});
+      process.exit(1);
+    }
     const pRecall = ebisu.predictRecall(card.model, elapsed(card.time, now));
     if (pRecall < best.pRecall) {
       best = {card, lino, pRecall};
