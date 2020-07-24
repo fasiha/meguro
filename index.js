@@ -21,7 +21,7 @@ while (notdone) {
 
   const lines = fs.readFileSync(filename, 'utf8').split('\n');
   for (const [lino, line] of lines.entries()) {
-    if (!(/.+ .+@@/.test(line))) { continue; }
+    if (!(/[^@]+@@/.test(line))) { continue; }
     const data = line.split('@@', 2)[1];
     if (data.trim() === '') {
       best = {card: {model: DEFAULT_MODEL}, lino, pRecall: -Infinity};
@@ -47,16 +47,20 @@ while (notdone) {
   }
 
   const [quizRelevant, ...extra] = lines[best.lino].split('@@', 1)[0].split(/(\()/);
-  const [prompt, ...expecteds] = quizRelevant.split(/\s+/);
+  const [prompt, ...expecteds] = quizRelevant.trim().split(/\s+/);
+  if (expecteds.length === 0) { console.log('Enter→you remember the card. Any other text→you forgot it.') }
   const response = readlineSync.question(`${prompt} :: `).trim();
-  if (!response) {
+  if (!response && expecteds.length > 0) {
     console.log('Quitting');
     process.exit(0);
   }
-  const result = prompt === response || expecteds.map(kana.kata2hira).includes(kana.kata2hira(response));
+  const result = expecteds.length === 0
+                     ? !response
+                     : prompt === response || expecteds.map(kana.kata2hira).includes(kana.kata2hira(response));
 
-  console.log(`${result ? '💇‍♀️⚡️🎊🍌' : `🙅‍♂️👎❌🚷, expected: ${expecteds}`}. ${
-      extra.join('')}`);
+  console.log(`${
+      result ? '💇‍♀️⚡️🎊🍌'
+             : `🙅‍♂️👎❌🚷${expecteds.length ? `, expected: ${expecteds}` : ''}`}. ${extra.join('')}`);
   const scale = readlineSync.question(
       `Type a number to scale this card's easiness, Enter to see next question, or anything else to quit > `);
 
