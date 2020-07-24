@@ -46,15 +46,16 @@ while (notdone) {
     process.exit(0);
   }
 
-  var [prompt, _sep, expected, ...extra] = lines[best.lino].split('@@')[0].split(/(\s)/);
+  const [quizRelevant, ...extra] = lines[best.lino].split('@@', 1)[0].split(/(\()/);
+  const [prompt, ...expecteds] = quizRelevant.split(/\s+/);
   var response = readlineSync.question(`${prompt} :: `).trim();
   if (!response) {
     console.log('Quitting');
     process.exit(0);
   }
-  var result = prompt === response || kana.kata2hira(response) === kana.kata2hira(expected);
+  const result = prompt === response || expecteds.map(kana.kata2hira).includes(kana.kata2hira(response));
 
-  console.log(`${result ? '💇‍♀️⚡️🎊🍌' : `🙅‍♂️👎❌🚷, expected: ${expected}`}. ${
+  console.log(`${result ? '💇‍♀️⚡️🎊🍌' : `🙅‍♂️👎❌🚷, expected: ${expecteds}`}. ${
       extra.join('')}`);
   var scale = readlineSync.question(
       `Type a number to scale this card's easiness, Enter to see next question, or anything else to quit > `);

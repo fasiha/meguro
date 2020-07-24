@@ -4,17 +4,17 @@ Command-line app for very, very simple flashcards.
 
 Any line that has
 1. a word (the prompt, i.e., the question),
-2. another word (the expected answer),
-3. optionally anything else,
-4. and two at symbols, i.e.,
+2. one or more words (acceptable answers),
+3. (optionally, anything following an open-parenthesis symbol, `(`,)
+4. and two *at*-symbols, i.e.,
 ```
 @@
 ```
 is treated as a flashcard. Stuff after the double-@ is Meguro-specific stuff. For example:
 
-☀️ sun "Oh Mr Sun, Sun, Mr Golden Sun" @@
+☀️ sun soleil たいよう ("Oh Mr Sun, Sun, Mr Golden Sun") @@
 
-The ☀️ emoji and "sun" comprise the flashcard. The "Oh Mr Sun, Sun, Mr Golden Sun" is extra information that'll be shown after you answer this flashcard.
+This flashcard has the ☀️ emoji on its front (the prompt). Acceptable answers are "sun", "soleil", and "たいよう" (or タイヨウ because Meguro automatically converts between hiragana and katakana as needed). The "Oh Mr Sun, Sun, Mr Golden Sun" is extra information that'll be shown after you answer this flashcard.
 
 ## Installation and launching
 Meguro requires [Node.js](https://nodejs.org)—either LTS or current version is fine.
@@ -55,9 +55,9 @@ As mentioned, if you don't need to scale the card's easiness, just hit Enter. In
 
 Here are another couple of flashcards so you can see how it works:
 
-🚢 boat @@
+🚢 boat bateau ふね (🌊🌊🌊) @@
 
-🎹 piano @@
+🎹 piano ピアノ @@
 
 Out of the box, Meguro will convert between hiragana and katakana as needed.
 
@@ -69,5 +69,6 @@ And if you look at the file, you'll see Meguro puts JSON after the double-slashe
 [Get in touch.](https://fasiha.github.io/#contact)
 
 ## Changelog
+- **3.0** multiple acceptable answers, separated from extra info by parenthesis.
 - **2.0** uses double-at as separators, and supports extra information.
 - **1.0** development version
