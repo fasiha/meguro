@@ -16,10 +16,10 @@ var DEFAULT_MODEL = [2, 2, 1];
 
 var notdone = true;
 while (notdone) {
-  var now = Date.now();
-  var best = {card: undefined, lino: undefined, pRecall: Infinity};
+  const now = Date.now();
+  let best = {card: undefined, lino: undefined, pRecall: Infinity};
 
-  var lines = fs.readFileSync(filename, 'utf8').split('\n');
+  const lines = fs.readFileSync(filename, 'utf8').split('\n');
   for (const [lino, line] of lines.entries()) {
     if (!(/.+ .+@@/.test(line))) { continue; }
     const data = line.split('@@', 2)[1];
@@ -48,7 +48,7 @@ while (notdone) {
 
   const [quizRelevant, ...extra] = lines[best.lino].split('@@', 1)[0].split(/(\()/);
   const [prompt, ...expecteds] = quizRelevant.split(/\s+/);
-  var response = readlineSync.question(`${prompt} :: `).trim();
+  const response = readlineSync.question(`${prompt} :: `).trim();
   if (!response) {
     console.log('Quitting');
     process.exit(0);
@@ -57,12 +57,12 @@ while (notdone) {
 
   console.log(`${result ? '💇‍♀️⚡️🎊🍌' : `🙅‍♂️👎❌🚷, expected: ${expecteds}`}. ${
       extra.join('')}`);
-  var scale = readlineSync.question(
+  const scale = readlineSync.question(
       `Type a number to scale this card's easiness, Enter to see next question, or anything else to quit > `);
 
-  var newNow = new Date();
+  const newNow = new Date();
   /** @type{{model:Array<number>, time?: string}} */
-  var newCard = {
+  const newCard = {
     model: best.card.time ? ebisu.updateRecall(best.card.model, +result, 1, elapsed(best.card.time, newNow.valueOf()))
                           : best.card.model,
     time: newNow.toISOString()
@@ -72,8 +72,8 @@ while (notdone) {
     if (isNaN(scale = parseFloat(scale))) {
       notdone = false;
     } else {
-      var hl = ebisu.modelToPercentileDecay(newCard.model);
-      var scaledModel = ebisu.updateRecall(newCard.model, 1, 1, .001, false, hl);
+      const hl = ebisu.modelToPercentileDecay(newCard.model);
+      const scaledModel = ebisu.updateRecall(newCard.model, 1, 1, .001, false, hl);
       scaledModel[2] = hl * scale;
       newCard.model = scaledModel;
     }
