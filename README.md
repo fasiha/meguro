@@ -49,7 +49,9 @@ npx meguro README.md -s 💖💗
 npx meguro README.md --separator 💖💗
 ```
 
-(Recall that by default, the separator is whitespace, which is useful for vocabulary (especially in languages that don't have spaces), but is limiting otherwise.)
+> N.B. Recall that by default, the separator is whitespace, which is useful for vocabulary (especially in languages that don't have spaces), but is limiting otherwise.
+>
+> N.B.2. Depending on your terminal application or shell, you might have to wrap your separator in double- or single-quotes, e.g., `npx meguro README.md -s '💖💗'`. I have *not* tested this extensively, please open [an issue](https://github.com/fasiha/meguro/issues) and we'll try to help you.
 
 ## Development
 Alternatively, if you plan on *developing* Meguro, install [Git](https://git-scm.com) as well as [Node.js](https://nodejs.org), then run the following in your terminal:
