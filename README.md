@@ -2,7 +2,7 @@
 
 Command-line app for very, very simple flashcards.
 
-Any line that has
+Meguro looks for flashcards inside plain text files. Any line that has
 1. a word or phrase (the prompt, i.e., the question), followed by a separator (default: a space), followed by
 2. (optionally, one or more words/phrases separated by the same separator (default: a space): these are all the acceptable answers),
 3. (optionally, any text in parenthesis, i.e., `()`, which is shown *after* a quiz),
@@ -10,21 +10,27 @@ Any line that has
 ```
 @@
 ```
-is treated as a flashcard. Stuff after the double-@ is Meguro-specific stuff.
+is treated as a flashcard. Stuff after the double-@ will be Meguro-specific stuff.
 
-For example:
+Example 1:
 
 ☀️ sun soleil たいよう ("Oh Mr Sun, Sun, Mr Golden Sun") @@
 
 This flashcard has all three elements in it: the ☀️ emoji is the prompt, acceptable answers are "sun", "soleil", and "たいよう" (or タイヨウ because Meguro automatically converts between hiragana and katakana as needed), and finally, "Oh Mr Sun, Sun, Mr Golden Sun" is extra information that'll be shown after you answer this flashcard.
 
-In contrast, the following is a very minimal flashcard:
+Example 2, in contrast, is a very minimal flashcard:
 
 👒 @@
 
 The only "answer" required for this flashcard is whether you remember the sun-hat emoji or not.
 
-## Installation and launching
+Meguro smoothly handles both
+- automatic grading, where Meguro checks whether what you typed was one of the expected answers, as well as
+- manual grading, where Meguro shows you all expected answers and asks you to score your recall.
+
+In either case, the quiz is boolean (yes/no). It has no concept of difficulty.
+
+## Installation and use
 Meguro requires [Node.js](https://nodejs.org) (any version is ok).
 
 The *easy* way to run Meguro, if you don't plan on developing it, is 
@@ -68,10 +74,14 @@ node index.js README.md
 ```
 (The `-s`/`--separator` flag is also of course available here.)
 
-## Usage
-If you run Meguro on this README.md that you're reading, it will quiz you on the "sun" flashcard above. Type an answer, or just press Enter to quit.
+## Detailed usage
+If you run Meguro on this README.md that you're reading, it will quiz you on the "sun" flashcard above. You may
+1. type an answer, which Meguro will grade and give immediate feedback on, or
+2. press Enter, in which case Meguro will show you what answer(s) it expected and invite you to grade yourself by either
+  - pressing Enter again to indicate you remembered this flashcard, or
+  - typing anything else and then Enter to indicate you forgot it.
 
-Meguro will then tell you whether you answered correctly or not. If not, it will tell you the answer it was expecting. In either case, it'll also tell you any extra information accompanying the card.
+In all cases, Meguro will give you feedback on the answers it was expecting and any extra information accompanying the card.
 
 Then it will offer to let you scale the quiz's easiness or difficulty. Meguro uses [Ebisu](https://fasiha.github.io/ebisu) under the hood for nice Bayesian spaced-repetition scheduling, so you can totally just let it do its thing by just pressing Enter here. But, if you want Meguro to show you this flashcard less often because you really know it well, you can give it a number like 2 or 5 or something greater than 1 to *increase* the time between reviews by that amount.
 
@@ -99,6 +109,7 @@ And if you look at the file, you'll see Meguro puts JSON after the double-slashe
 [Get in touch.](https://fasiha.github.io/#contact)
 
 ## Changelog
+- **3.3** allow self-grading; bugfix in scale; don't overwrite a changed file; add color
 - **3.2** allow custom separators (see issue #2)
 - **3.1** allow flashcards to have no answers. These are self-graded pure-recall quizzes.
 - **3.0** multiple acceptable answers, separated from extra info by parenthesis.

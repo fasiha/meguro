@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 var fs = require('fs');
+var chalk = require('chalk');
 var ebisu = require('ebisu-js');
 var readlineSync = require('readline-sync');
 var commandLineArgs = require('command-line-args');
@@ -56,7 +57,8 @@ while (notdone) {
   const now = Date.now();
   let best = {card: undefined, lino: undefined, pRecall: Infinity};
 
-  const lines = fs.readFileSync(filename, 'utf8').split('\n');
+  const fullfile = fs.readFileSync(filename, 'utf8');
+  const lines = fullfile.split('\n');
   for (const [lino, line] of lines.entries()) {
     if (!(/[^@]+@@/.test(line))) { continue; }
     const data = line.split('@@', 2)[1];
@@ -85,20 +87,22 @@ while (notdone) {
 
   const [quizRelevant, ...extra] = lines[best.lino].split('@@', 1)[0].split(/(\()/);
   const [prompt, ...expecteds] = quizRelevant.trim().split(separator).map(s => s.trim());
+  const expectedsString = expecteds.map(s => chalk.bold(s)).join(' or ');
   if (expecteds.length === 0) { console.log('Enter→you remember the card. Any other text→you forgot it.') }
-  const response = readlineSync.question(`${prompt} :: `).trim();
-  if (!response && expecteds.length > 0) {
-    console.log('Quitting');
-    process.exit(0);
-  }
-  const result = expecteds.length === 0
-                     ? !response
+  const response = readlineSync.question(`${chalk.bold(prompt)} :: `).trim();
+  const result = expecteds.length === 0 ? !response
+                 : response === ''
+                     ? !readlineSync
+                            .question(`Expected answers: ${expectedsString}.
+Enter→you remembered, any other text→you forgot. `)
+                            .trim()
                      : prompt === response || expecteds.map(kana.kata2hira).includes(kana.kata2hira(response));
 
   console.log(`${
       result ? '💇‍♀️⚡️🎊🍌'
-             : `🙅‍♂️👎❌🚷${expecteds.length ? `, expected: ${expecteds}` : ''}`}. ${extra.join('')}`);
-  const scale = readlineSync.question(
+             : `🙅‍♂️👎❌🚷${expecteds.length ? `, expected: ${expectedsString}` : ''}`}. ${
+      chalk.underline(extra.join(''))}`);
+  let scale = readlineSync.question(
       `Type a number to scale this card's easiness, Enter to see next question, or anything else to quit > `);
 
   const newNow = new Date();
@@ -112,6 +116,7 @@ while (notdone) {
   if (scale) {
     if (isNaN(scale = parseFloat(scale))) {
       notdone = false;
+      // we've already told the user above that "anything else" will quit so don't warn them again
     } else {
       const hl = ebisu.modelToPercentileDecay(newCard.model);
       const scaledModel = ebisu.updateRecall(newCard.model, 1, 1, .001, false, hl);
@@ -120,6 +125,16 @@ while (notdone) {
     }
   }
 
-  lines[best.lino] = lines[best.lino].split('@@')[0] + `@@ ${JSON.stringify(newCard)}`;
-  fs.writeFileSync(filename, lines.join('\n'));
+  // REREAD the file and make sure its contents haven't changed (this is more reliable than, and easier than, checking
+  // modified timestamp). Of course this might wind up being grossly inefficient.
+  if (fullfile === fs.readFileSync(filename, 'utf8')) {
+    lines[best.lino] = lines[best.lino].split('@@')[0] + `@@ ${JSON.stringify(newCard)}`;
+    fs.writeFileSync(filename, lines.join('\n'));
+  } else {
+    console.log(chalk.red.bgWhite.bold(
+        'Your file changed during quiz. To avoid losing changes, your results will NOT be written.'));
+    process.exit(1);
+  }
+  // Newline to space out cards
+  console.log('');
 }

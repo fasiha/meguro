@@ -1,6 +1,6 @@
 {
   "name": "meguro",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "",
   "main": "index.js",
   "bin": "./index.js",
@@ -17,6 +17,7 @@
   },
   "license": "Unlicense",
   "dependencies": {
+    "chalk": "^4.1.0",
     "command-line-args": "^5.1.1",
     "command-line-usage": "^6.1.1",
     "ebisu-js": "^2.0.0",
