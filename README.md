@@ -2,7 +2,7 @@
 
 Command-line app for very, very simple flashcards.
 
-Meguro looks for flashcards inside plain text files. Any line that has
+Meguro looks for flashcards inside a plain text file. Any line that has
 1. a word or phrase (the prompt, i.e., the question), followed by a separator (default: a space), followed by
 2. (optionally, one or more words/phrases separated by the same separator (default: a space): these are all the acceptable answers),
 3. (optionally, any text in parenthesis, i.e., `()`, which is shown *after* a quiz),
