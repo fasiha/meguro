@@ -3,9 +3,46 @@
 var fs = require('fs');
 var ebisu = require('ebisu-js');
 var readlineSync = require('readline-sync');
+var commandLineArgs = require('command-line-args');
 var kana = require('./kana');
 
-var filename = process.argv[2] || 'README.md';
+var optionDefinitions = [
+  {name: 'input', type: String, defaultOption: true},
+  {name: 'separator', alias: 's', type: String},
+  {name: 'help', description: 'Print this usage guide.', type: Boolean},
+];
+var options = commandLineArgs(optionDefinitions)
+
+var filename = options.input;
+var separator = options.separator || /\s+/;
+
+if (!fs.existsSync(filename) || options.help) {
+  const commandLineUsage = require('command-line-usage');
+  const sections = [
+    {header: 'Meguro', content: '{italic Very} simple flashcards. https://github.com/fasiha/meguro'}, {
+      header: 'Options',
+      optionList: [
+        {
+          name: optionDefinitions[0].name,
+          defaultOption: true,
+          typeLabel: '{underline file}',
+          description: 'File containing Meguro flashcards'
+        },
+        {
+          name: optionDefinitions[1].name,
+          alias: optionDefinitions[1].alias,
+          typeLabel: '{underline separator}',
+          description: 'OPTIONAL: text separating question and answer(s)'
+        },
+        {name: 'help', description: 'Print this usage guide.', type: Boolean},
+      ]
+    }
+  ];
+  const usage = commandLineUsage(sections);
+  if (!options.help && filename && !fs.existsSync(filename)) { console.log('ERROR: file not found'); }
+  console.log(usage);
+  process.exit(1);
+}
 
 /**
  * @param {string} s
@@ -47,7 +84,7 @@ while (notdone) {
   }
 
   const [quizRelevant, ...extra] = lines[best.lino].split('@@', 1)[0].split(/(\()/);
-  const [prompt, ...expecteds] = quizRelevant.trim().split(/\s+/);
+  const [prompt, ...expecteds] = quizRelevant.trim().split(separator).map(s => s.trim());
   if (expecteds.length === 0) { console.log('Enter→you remember the card. Any other text→you forgot it.') }
   const response = readlineSync.question(`${prompt} :: `).trim();
   if (!response && expecteds.length > 0) {

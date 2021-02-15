@@ -3,14 +3,16 @@
 Command-line app for very, very simple flashcards.
 
 Any line that has
-1. a word (the prompt, i.e., the question), followed by a space, followed by
-2. (optionally, one or more words separated by a space: these are acceptable answers),
-3. (optionally, any text in parenthesis, which is shown *after* a quiz),
-4. and two *at*-symbols, i.e.,
+1. a word or phrase (the prompt, i.e., the question), followed by a separator (default: a space), followed by
+2. (optionally, one or more words/phrases separated by the same separator (default: a space): these are all the acceptable answers),
+3. (optionally, any text in parenthesis, i.e., `()`, which is shown *after* a quiz),
+4. and **required** two *at*-symbols, i.e.,
 ```
 @@
 ```
-is treated as a flashcard. Stuff after the double-@ is Meguro-specific stuff. For example:
+is treated as a flashcard. Stuff after the double-@ is Meguro-specific stuff.
+
+For example:
 
 ☀️ sun soleil たいよう ("Oh Mr Sun, Sun, Mr Golden Sun") @@
 
@@ -29,11 +31,26 @@ The *easy* way to run Meguro, if you don't plan on developing it, is
 1. to write a file containing some flashcards as described above (or downloading [this very README.md](https://raw.githubusercontent.com/fasiha/meguro/master/README.md) that you're reading!), then 
 2. in your terminal (Terminal app, Command Prompt, xterm, etc.) run
 ```console
-npx meguro README.MD
+npx meguro README.md
 ```
 (You may first need to use `cd` to enter the directory you saved the file, or change `README.md` above to whatever your filename might be.)
 
-Alternatively, if you plan on developing Meguro, install [Git](https://git-scm.com) and [Node.js](https://nodejs.org), then run the following in your terminal:
+### Custom separator
+Use the `-s` or `--separator` command-line flag to tell Meguro what separator you used between your prompts and acceptable answers. For example, suppose you have a file where you use "💖💗" to separate these, e.g.,
+
+☀️ 💖💗 sun 💖💗 soleil 💖💗 たいよう ("Oh Mr Sun, Sun, Mr Golden Sun") @@
+
+To tell Meguro about your custom separator, run it like this:
+```console
+npx meguro README.md -s 💖💗
+```
+*or*
+```console
+npx meguro README.md --separator 💖💗
+```
+
+## Development
+Alternatively, if you plan on *developing* Meguro, install [Git](https://git-scm.com) as well as [Node.js](https://nodejs.org), then run the following in your terminal:
 ```shell
 git clone https://github.com/fasiha/meguro
 cd meguro
@@ -45,6 +62,7 @@ Then you can launch Meguro on README.me (this file!) by
 ```shell
 node index.js README.md
 ```
+(The `-s`/`--separator` flag is also of course available here.)
 
 ## Usage
 If you run Meguro on this README.md that you're reading, it will quiz you on the "sun" flashcard above. Type an answer, or just press Enter to quit.
@@ -77,6 +95,7 @@ And if you look at the file, you'll see Meguro puts JSON after the double-slashe
 [Get in touch.](https://fasiha.github.io/#contact)
 
 ## Changelog
+- **3.2** allow custom separators (see issue #2)
 - **3.1** allow flashcards to have no answers. These are self-graded pure-recall quizzes.
 - **3.0** multiple acceptable answers, separated from extra info by parenthesis.
 - **2.0** uses double-at as separators, and supports extra information.
