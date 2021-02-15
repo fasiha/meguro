@@ -78,8 +78,8 @@ node index.js README.md
 If you run Meguro on this README.md that you're reading, it will quiz you on the "sun" flashcard above. You may
 1. type an answer, which Meguro will grade and give immediate feedback on, or
 2. press Enter, in which case Meguro will show you what answer(s) it expected and invite you to grade yourself by either
-  - pressing Enter again to indicate you remembered this flashcard, or
-  - typing anything else and then Enter to indicate you forgot it.
+    - pressing Enter again to indicate you remembered this flashcard, or
+    - typing anything else and then Enter to indicate you forgot it.
 
 In all cases, Meguro will give you feedback on the answers it was expecting and any extra information accompanying the card.
 
